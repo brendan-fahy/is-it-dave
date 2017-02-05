@@ -1,7 +1,10 @@
 package brendan.is.it.dave;
 
+import android.animation.Animator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -17,16 +20,38 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView textView;
 
+    private ImageView daveHead;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         textView = (TextView) findViewById(R.id.textView);
+        daveHead = (ImageView) findViewById(R.id.daveHead);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(R.string.main_activity_title);
         }
+
+        initAnimateDave(3000);
+    }
+
+    private void initAnimateDave(long startDelay) {
+        daveHead.animate()
+                .alpha(1f)
+                .setStartDelay(startDelay)
+                .setListener(new Animator.AnimatorListener() {
+
+                    @Override
+                    public void onAnimationEnd(Animator animator) {daveHead.setAlpha(0f);
+
+                    }
+
+                    @Override public void onAnimationStart(Animator animator) {}
+                    @Override public void onAnimationCancel(Animator animator) {}
+                    @Override public void onAnimationRepeat(Animator animator) {}
+                });
     }
 
     @Override
@@ -34,6 +59,14 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         textView.setText(isItDavesBirthday() ? R.string.yes: R.string.no);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                initAnimateDave(0);
+            }
+        });
+
+        initAnimateDave(3000);
     }
 
     private boolean isItDavesBirthday() {
